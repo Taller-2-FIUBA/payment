@@ -59,6 +59,23 @@ const payout = ({ config }) => async (receiverWallet, amountToSend, deployerWall
   return tx;
 };
 
+const extract = ({ config }) => async (receiverAddress, amountToSend, deployerWallet) => {
+  const basicPayments = getContract(config, deployerWallet);
+  let amount = ethers.utils.parseEther(amountToSend).toHexString();
+  const tx = await basicPayments.sendPayment(receiverAddress, amount);
+  tx.wait(1).then(receipt => {
+    console.log("Transaction mined", receiverAddress, "\n");
+    const firstEvent = receipt && receipt.events && receipt.events[0];
+    if (firstEvent && firstEvent.event == "PaymentMade") {
+      console.log(`Successful deposit`);
+    } else {
+      console.error(`Payment not created in tx ${tx.hash}`);
+    }
+  });
+  return tx;
+};
+
+
 const getDepositReceipt =
   ({}) =>
   async depositTxHash => {
@@ -68,5 +85,6 @@ const getDepositReceipt =
 module.exports = dependencies => ({
   deposit: deposit(dependencies),
   getDepositReceipt: getDepositReceipt(dependencies),
-  payout: payout(dependencies)
+  payout: payout(dependencies),
+  extract: extract(dependencies)
 });
