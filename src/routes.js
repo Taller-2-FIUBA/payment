@@ -5,6 +5,7 @@ const createDeposit = require("./handlers/createDepositHandler");
 const getDeposit = require("./handlers/getDepositHandler");
 const getWalletBalance = require("./handlers/getWalletBalanceHandler");
 const makeExtraction = require("./handlers/makeExtractionHandler");
+const addBalance = require("./handlers/addBalanceHandler");
 
 const BASE_URI = "/payment"
 function getWalletDataRoute({ services, config }) {
@@ -70,7 +71,16 @@ function makeExtractionRoute({ services, config }) {
   };
 }
 
+function addBalanceRoute ({ services, config }) {
+  return {
+    method: "PATCH",
+    url: BASE_URI + "/wallet/:address/balance",
+    schema: addBalance.schema(config),
+    handler: addBalance.handler({ config, ...services }),
+  };
+}
 
 
 module.exports = [getWalletDataRoute, getWalletsDataRoute, createWalletRoute,
-  createDepositRoute, getDepositRoute, getWalletBalanceRoute, makeExtractionRoute];
+  createDepositRoute, getDepositRoute, getWalletBalanceRoute, makeExtractionRoute,
+addBalanceRoute];
