@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: payment
-        image: marianocinalli/payment:v0.0.5
+        image: marianocinalli/payment:v0.0.6
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
