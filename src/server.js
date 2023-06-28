@@ -4,7 +4,7 @@ const routes = require("./routes");
 const Sentry = require("@sentry/node");
 
 if (process.env.SENTRY_ENABLED) {
-  Sentry.init({dsn: process.env.SENTRY_DSN, tracesSampleRate: 1.0});
+  Sentry.init({ dsn: process.env.SENTRY_DSN, tracesSampleRate: 1.0 });
 }
 
 // Require the framework and instantiate it
@@ -18,7 +18,7 @@ fastify.setErrorHandler(async (error, request, reply) => {
     Sentry.captureException(error);
   }
   reply.status(500).send({ error: "Something went wrong" });
-})
+});
 
 // Declares routes
 routes.forEach(route => fastify.route(route({ config, services })));
@@ -27,7 +27,7 @@ routes.forEach(route => fastify.route(route({ config, services })));
 const start = async () => {
   const server_port = process.env.PORT;
   try {
-    await fastify.listen({ port: server_port, host: '0.0.0.0' });
+    await fastify.listen({ port: server_port, host: "0.0.0.0" });
     fastify.log.info(`server listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);

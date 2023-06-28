@@ -1,4 +1,4 @@
-const {ethers} = require("ethers");
+const { ethers } = require("ethers");
 
 function schema() {
   return {
@@ -6,18 +6,22 @@ function schema() {
       type: "object",
       properties: {
         address: {
-          type: "string"
-        }
+          type: "string",
+        },
       },
     },
     required: ["address"],
   };
 }
 
-function handler({contractInteraction, walletService}) {
+function handler({ contractInteraction, walletService }) {
   return async function (req, reply) {
     let deployerWallet = await walletService.getDeployerWallet();
-    await contractInteraction.payout(walletService.getWallet(req.body.receiverKey),req.body.amountInEthers, deployerWallet)
+    await contractInteraction.payout(
+      walletService.getWallet(req.body.receiverKey),
+      req.body.amountInEthers,
+      deployerWallet,
+    );
     reply.code(200).send();
   };
 }
